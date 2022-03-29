@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ir.iut.doctor_akhavan_project">
    <application
-        android:label="doctor_akhavan_project"
+        android:label="فاصله یاب"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
