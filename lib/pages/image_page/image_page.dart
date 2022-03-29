@@ -1,11 +1,13 @@
 import 'package:camera/camera.dart';
+import 'package:doctor_akhavan_project/helpers/mixin.dart';
+import 'package:doctor_akhavan_project/pages/distance_finder_page/distance_finder_page.dart';
 import 'package:doctor_akhavan_project/services/draw_image_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'widgets/body.dart';
 
-class ImagePage extends StatelessWidget {
+class ImagePage extends StatelessWidget with WidgetHelper {
   final XFile image;
   const ImagePage({Key? key, required this.image}) : super(key: key);
 
@@ -17,38 +19,33 @@ class ImagePage extends StatelessWidget {
         final provider = context.watch<DrawImageProvider>();
         return Scaffold(
           extendBodyBehindAppBar: true,
-          appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            centerTitle: true,
-            title: _buildComment(context),
+          backgroundColor: Colors.black,
+          appBar: customAppBar(
+            title: buildComment(
+              context,
+              text: 'پنج نقطه در تصویر انتخاب کنید',
+            ),
           ),
-          body: const Body(),
-          floatingActionButton: provider.isCompleted
+          body: const Align(alignment: Alignment.bottomCenter, child: Body()),
+          floatingActionButton: provider.points.length >= maxPointsNum
               ? FloatingActionButton(
                   onPressed: () {
-                    //todo
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DistanceFinderPage(
+                          image: image,
+                          points: provider.points,
+                        ),
+                      ),
+                      (route) => route.isFirst,
+                    );
                   },
                   child: const Icon(Icons.done),
                 )
               : null,
         );
       },
-    );
-  }
-
-  Widget _buildComment(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16), color: Colors.black12),
-      child: Text(
-        'پنج نقطه در تصویر انتخاب کنید',
-        style: Theme.of(context)
-            .textTheme
-            .bodyLarge
-            ?.copyWith(color: Colors.white),
-      ),
     );
   }
 }

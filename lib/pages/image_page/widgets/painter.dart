@@ -3,19 +3,19 @@ import 'dart:ui';
 import 'package:doctor_akhavan_project/services/draw_image_provider.dart';
 import 'package:flutter/material.dart';
 
-class OpenPainter extends CustomPainter {
+class CustomPointPainter extends CustomPainter {
   final DrawImageProvider provider;
 
-  OpenPainter(this.provider);
+  CustomPointPainter(this.provider);
 
   @override
   void paint(Canvas canvas, Size size) {
-    Paint paint1 = Paint()
+    Paint paint = Paint()
       ..color = Colors.red
       ..strokeCap = StrokeCap.round
       ..strokeWidth = 8;
     //draw points on canvas
-    canvas.drawPoints(PointMode.points, provider.points, paint1);
+    canvas.drawPoints(PointMode.points, provider.points, paint);
   }
 
   @override

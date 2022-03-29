@@ -1,6 +1,7 @@
 import 'package:doctor_akhavan_project/services/camera_service.dart';
 import 'package:flutter/material.dart';
 
+import '../../helpers/mixin.dart';
 import 'widgets/body.dart';
 
 class CameraPage extends StatefulWidget {
@@ -10,16 +11,16 @@ class CameraPage extends StatefulWidget {
   State<CameraPage> createState() => _CameraPageState();
 }
 
-class _CameraPageState extends State<CameraPage> {
+class _CameraPageState extends State<CameraPage> with WidgetHelper {
   final CameraService _service = CameraService();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
+      appBar: customAppBar(
+          title: buildComment(context,
+              text:
+                  'برای محاسبه درست ابعاد تصویر\nآن را در فاصله 30cm از دوربین قرار دهید')),
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.black,
       body: FutureBuilder(

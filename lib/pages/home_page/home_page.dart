@@ -23,7 +23,7 @@ class HomePage extends StatelessWidget {
               ),
             ),
             const Text(
-              'کاربر گرامی، برای محاسبه درست فاصله نقاط در تصویر لطفا جسم را در 20 سانتی از دوربین قرار دهید. ',
+              'کاربر گرامی، برای محاسبه درست فاصله نقاط در تصویر لطفا جسم را در 30 سانتی متری از دوربین قرار دهید. ',
               textDirection: TextDirection.rtl,
             ),
             const Spacer(),

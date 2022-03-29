@@ -16,7 +16,10 @@ class _BodyState extends State<Body> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        CameraPreview(widget.cameraService.controller),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: CameraPreview(widget.cameraService.controller),
+        ),
         Column(
           children: [
             const Spacer(),
@@ -28,7 +31,9 @@ class _BodyState extends State<Body> {
                 OutlinedButton(
                   style: _customOutlinedButtonStyle(),
                   child: const Icon(Icons.cameraswitch),
-                  onPressed: () {},
+                  onPressed: () => setState(() {
+                    widget.cameraService.switchCamera();
+                  }),
                 ),
                 const Spacer(),
                 ElevatedButton(
@@ -41,7 +46,7 @@ class _BodyState extends State<Body> {
                   style: _customOutlinedButtonStyle(),
                   child: Icon(widget.cameraService.flashModeIcon),
                   onPressed: () =>
-                      setState(() => widget.cameraService.switchCamera()),
+                      setState(() => widget.cameraService.changeFlashMode()),
                 ),
                 const Spacer(),
               ],

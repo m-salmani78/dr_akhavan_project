@@ -1,27 +1,28 @@
 import 'dart:io';
 
-import 'package:doctor_akhavan_project/pages/image_page/widgets/painter.dart';
+import 'package:doctor_akhavan_project/services/image_distance_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../services/draw_image_provider.dart';
+import 'distance_painter.dart';
 
 class Body extends StatelessWidget {
   const Body({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.watch<DrawImageProvider>();
+    final provider = context.watch<ImageDistanceProvider>();
     return GestureDetector(
       onPanStart: (details) {
-        final box = context.findRenderObject() as RenderBox;
-        final point = box.globalToLocal(details.globalPosition);
-        provider.setPoint(point);
+        provider.selectPoint(details.localPosition);
       },
       child: RepaintBoundary(
         child: CustomPaint(
           child: Image.file(File(provider.image.path)),
-          foregroundPainter: CustomPointPainter(provider),
+          foregroundPainter: CustomDistancePainter(
+            points: provider.points,
+            selectedPoint: provider.selectedPoint,
+          ),
         ),
       ),
     );
