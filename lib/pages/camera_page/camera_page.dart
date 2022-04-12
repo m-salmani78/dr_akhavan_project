@@ -17,10 +17,7 @@ class _CameraPageState extends State<CameraPage> with WidgetHelper {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar(
-          title: buildComment(context,
-              text:
-                  'برای محاسبه درست ابعاد تصویر\nآن را در فاصله 30cm از دوربین قرار دهید')),
+      appBar: customAppBar(),
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.black,
       body: FutureBuilder(

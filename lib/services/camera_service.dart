@@ -15,7 +15,10 @@ class CameraService {
     log('$cameras', name: 'camera');
     if (cameras == null) throw Exception();
     controller = CameraController(
-      cameras![0],
+      cameras!.firstWhere(
+        (element) => element.lensDirection == CameraLensDirection.back,
+        orElse: () => cameras![0],
+      ),
       ResolutionPreset.max,
       enableAudio: false,
     );
