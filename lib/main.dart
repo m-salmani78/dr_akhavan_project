@@ -1,9 +1,8 @@
 import 'dart:async';
+import 'package:doctor_akhavan_project/pages/mode_options_page/mode_options_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-
-import 'pages/home_page/home_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,7 +26,7 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       theme: ThemeData(fontFamily: "IranianSans"),
-      home: const HomePage(),
+      home: const ModeOptionsPage(),
     );
   }
 }

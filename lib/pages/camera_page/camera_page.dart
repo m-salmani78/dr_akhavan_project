@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:doctor_akhavan_project/services/camera_service.dart';
 import 'package:flutter/material.dart';
 
@@ -17,7 +18,9 @@ class _CameraPageState extends State<CameraPage> with WidgetHelper {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar(),
+      appBar: customAppBar(
+          title: buildComment(context,
+              text: 'دوربین را بصورت کاملا عمودی نگه دارید')),
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.black,
       body: FutureBuilder(
@@ -27,7 +30,15 @@ class _CameraPageState extends State<CameraPage> with WidgetHelper {
             return const Center(child: Text('Error Accured'));
           }
           if (snapshot.connectionState == ConnectionState.done) {
-            return Body(cameraService: _service);
+            return Stack(
+              children: [
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: CameraPreview(_service.controller),
+                ),
+                RepaintBoundary(child: Body(cameraService: _service))
+              ],
+            );
           } else {
             return const Center(child: CircularProgressIndicator());
           }
