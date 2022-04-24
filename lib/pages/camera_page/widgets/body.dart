@@ -25,7 +25,7 @@ class _BodyState extends State<Body> {
       (event) => setState(() {
         dx = event.x * (100 / 9.8);
         dy = event.y * (100 / 9.8);
-        _rightAngle = dy >= 98 && dx.abs() <= 1;
+        _rightAngle = dy >= 98 && dx.abs() <= 1.5;
       }),
     );
     super.initState();

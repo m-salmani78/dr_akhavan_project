@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:camera/camera.dart';
-import 'package:doctor_akhavan_project/pages/image_page/image_page.dart';
+import 'package:doctor_akhavan_project/pages/image_editor_page/image_editor_page.dart';
 import 'package:flutter/material.dart';
 
 class CameraService {
@@ -31,11 +31,7 @@ class CameraService {
     final image = await controller.takePicture();
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(
-        builder: (context) {
-          return ImagePage(image: image);
-        },
-      ),
+      MaterialPageRoute(builder: (context) => ImageEditorPage(image: image)),
     );
   }
 

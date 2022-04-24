@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
 mixin WidgetHelper {
-  AppBar customAppBar({Widget? title}) {
+  AppBar customAppBar({Widget? title, Widget? leading, List<Widget>? actions}) {
     return AppBar(
       backgroundColor: Colors.black,
       elevation: 0,
       centerTitle: true,
       title: title,
+      actions: actions,
+      leading: leading,
     );
   }
 
