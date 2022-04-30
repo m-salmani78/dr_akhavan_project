@@ -7,7 +7,7 @@ class ModeOptionsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('انتخاب حالت تصویر')),
+      appBar: AppBar(title: const Text('آنالیز'), centerTitle: true),
       body: ListView(
         padding: const EdgeInsets.all(8),
         children: const [

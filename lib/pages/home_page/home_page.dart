@@ -1,57 +1,52 @@
+import 'package:doctor_akhavan_project/pages/mode_options_page/mode_options_page.dart';
+import 'package:doctor_akhavan_project/pages/results_page/results_page.dart';
+import 'package:doctor_akhavan_project/pages/settings_page/settings_page.dart';
 import 'package:flutter/material.dart';
 
-import '../camera_page/camera_page.dart';
+const List<Widget> _slides = [
+  ModeOptionsPage(),
+  ResultsPage(),
+  SettingsPage(),
+];
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _selectedIndex = 0;
+  @override
   Widget build(BuildContext context) {
-    final double size = MediaQuery.of(context).size.width / 3;
     return Scaffold(
-      appBar: AppBar(title: const Text('فاصله یاب')),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            const SizedBox(
-              width: double.infinity,
-              child: Text(
-                'توضیحات:',
-                textDirection: TextDirection.rtl,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-              ),
-            ),
-            const Text(
-              'کاربر گرامی، برای محاسبه درست فاصله نقاط در تصویر لطفا جسم را در 30 سانتی متری از دوربین قرار دهید. ',
-              textDirection: TextDirection.rtl,
-            ),
-            const Spacer(),
-            Container(
-              constraints: BoxConstraints(minWidth: size, minHeight: size),
-              child: OutlinedButton(
-                  style: _customOutlinedButtonStyle(),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const CameraPage(),
-                      ),
-                    );
-                  },
-                  child: const Icon(Icons.camera_alt_rounded, size: 48)),
-            ),
-            const Spacer(flex: 2),
-          ],
-        ),
+      body: _slides[_selectedIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: (value) => setState(() => _selectedIndex = value),
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.camera_alt),
+            label: 'آنالیز',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.description),
+            label: 'نتایج',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'تنظیمات',
+          )
+        ],
       ),
     );
   }
 
-  ButtonStyle _customOutlinedButtonStyle() {
-    return OutlinedButton.styleFrom(
-      padding: const EdgeInsets.all(16),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-    );
-  }
+  // ButtonStyle _customOutlinedButtonStyle() {
+  //   return OutlinedButton.styleFrom(
+  //     padding: const EdgeInsets.all(16),
+  //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+  //   );
+  // }
 }

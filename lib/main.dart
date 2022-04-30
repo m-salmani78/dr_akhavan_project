@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:doctor_akhavan_project/configs/default_theme.dart';
-import 'package:doctor_akhavan_project/pages/mode_options_page/mode_options_page.dart';
+import 'package:doctor_akhavan_project/pages/home_page/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
         GlobalCupertinoLocalizations.delegate,
       ],
       theme: defaultTheme(),
-      home: const ModeOptionsPage(),
+      home: const HomePage(),
     );
   }
 }
