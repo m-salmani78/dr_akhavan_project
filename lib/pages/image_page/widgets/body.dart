@@ -13,10 +13,12 @@ class Body extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = context.watch<DrawImageProvider>();
     return GestureDetector(
-      onPanStart: (details) {
-        final box = context.findRenderObject() as RenderBox;
-        final point = box.globalToLocal(details.globalPosition);
-        provider.setPoint(point);
+      onPanUpdate: (DragUpdateDetails details) {
+        final distance =
+            (provider.selectedPoint - details.localPosition).distance;
+        if (distance <= selectableAreaRadius) {
+          provider.updateSelectedPoint(details.delta);
+        }
       },
       child: RepaintBoundary(
         child: CustomPaint(
