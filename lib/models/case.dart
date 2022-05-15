@@ -1,11 +1,11 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'dart:convert';
 
-import 'package:path_provider/path_provider.dart';
+part 'case.g.dart';
 
 Case caseFromJson(String str) => Case.fromMap(jsonDecode(str));
 
@@ -13,25 +13,39 @@ String caseToJson(Case data) => jsonEncode(data.toMap());
 
 enum SideMode { front, back, right }
 
+@HiveType(typeId: 0)
 class Case {
   Case({
     required this.caseId,
     required this.patientId,
-    required this.imageName,
+    required this.imagePath,
+    required this.dateTime,
     required this.sideMode,
     required this.points,
+    required this.fileName,
   });
 
+  @HiveField(0)
   final int caseId;
+  @HiveField(1)
   final int patientId;
-  final String imageName;
+  @HiveField(2)
+  final String imagePath;
+  @HiveField(3)
+  final DateTime dateTime;
+  @HiveField(4)
   final SideMode sideMode;
+  @HiveField(5)
   final List<Offset> points;
+  @HiveField(6)
+  final String fileName;
 
   factory Case.fromMap(Map<String, dynamic> json) => Case(
         caseId: json["case_id"],
         patientId: json["patient_id"],
-        imageName: json["image_name"],
+        imagePath: json["image_path"],
+        fileName: json["file_name"],
+        dateTime: DateTime.parse(json["date_time"]),
         sideMode: SideMode.values[json["side_mode"].toInt()],
         points: List<Offset>.from(json["points"].map(
           (x) => Offset(json["dx"].toDouble(), json["dy"].toDouble()),
@@ -41,7 +55,9 @@ class Case {
   Map<String, dynamic> toMap() => {
         "case_id": caseId,
         "patient_id": patientId,
-        "image_name": imageName,
+        "image_path": imagePath,
+        "file_name": fileName,
+        "date_time": dateTime.toString(),
         "side_mode": sideMode.index,
         "points": points
             .map<Map<String, double>>(
@@ -50,20 +66,10 @@ class Case {
             .toList(),
       };
 
-  Future<bool> saveToFile(XFile image) async {
+  Future<bool> saveToFile(String dir) async {
     try {
-      String? dir;
-      if (Platform.isAndroid) {
-        dir = (await getExternalStorageDirectory())?.path;
-      } else if (Platform.isIOS) {
-        dir = (await getApplicationDocumentsDirectory()).path;
-      }
-      if (dir == null) return false;
-      await image.saveTo(dir + imageName);
-      final jsonFile = File('$dir/data_${patientId}_$caseId.json');
-      log('json : ${jsonFile.path}', name: 'save to file');
+      final jsonFile = File('$dir/$fileName.json');
       await jsonFile.writeAsString(caseToJson(this));
-      log('json : ${jsonFile.path}', name: 'save to file');
       return true;
     } catch (e) {
       log('error: $e', name: 'saveToFile');

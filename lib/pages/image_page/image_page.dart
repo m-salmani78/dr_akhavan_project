@@ -34,7 +34,9 @@ class ImagePage extends StatelessWidget with WidgetHelper {
                       onPressed: () => Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
                           builder: (context) => DistanceAnglePage(
-                            provider: provider,
+                            image: provider.image,
+                            leftPoints: provider.leftPoints.toList(),
+                            rightPoints: provider.rightPoints.toList(),
                           ),
                         ),
                         (route) => route.isFirst,
