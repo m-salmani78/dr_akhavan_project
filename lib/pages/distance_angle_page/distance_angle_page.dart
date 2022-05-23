@@ -2,15 +2,18 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:camera/camera.dart';
+import 'package:doctor_akhavan_project/constants/app_constants.dart';
 import 'package:doctor_akhavan_project/helpers/mixin.dart';
 import 'package:doctor_akhavan_project/helpers/show_snack_bar.dart';
 import 'package:doctor_akhavan_project/models/case.dart';
+import 'package:doctor_akhavan_project/models/patient.dart';
 import 'package:doctor_akhavan_project/pages/home_page/home_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../../helpers/side_mode.dart';
 import 'widget/body.dart';
 
 class DistanceAnglePage extends StatefulWidget {
@@ -32,7 +35,7 @@ class DistanceAnglePage extends StatefulWidget {
 
 class _DistanceAnglePageState extends State<DistanceAnglePage>
     with WidgetHelper {
-  late Box<Case> box;
+  late Box<Patient> box;
   final _formKey = GlobalKey<FormState>();
   final _customTextStyle = const TextStyle(color: Colors.black87, fontSize: 16);
   bool _isDistanceMode = true;
@@ -40,7 +43,7 @@ class _DistanceAnglePageState extends State<DistanceAnglePage>
 
   @override
   void initState() {
-    box = Hive.box('caseBox');
+    box = Hive.box<Patient>(patientBox);
     super.initState();
   }
 
@@ -50,33 +53,34 @@ class _DistanceAnglePageState extends State<DistanceAnglePage>
       extendBodyBehindAppBar: true,
       extendBody: true,
       appBar: customAppBar(
-          title: CupertinoSlidingSegmentedControl<int>(
-            backgroundColor: Colors.grey,
-            groupValue: _isDistanceMode ? 1 : 0,
-            children: {
-              1: Text('ابعاد', style: _customTextStyle),
-              0: Text('انحراف', style: _customTextStyle),
-            },
-            onValueChanged: (value) {
-              if (value == null) return;
-              setState(() {
-                _isDistanceMode = value == 1;
-              });
-            },
-          ),
-          actions: [
-            if (widget.image != null)
-              IconButton(
-                onPressed: () async {
-                  showDialog(
-                    context: context,
-                    builder: (context) => _buildDialog(),
-                  );
-                },
-                tooltip: 'ذخیره',
-                icon: const Icon(Icons.save),
-              )
-          ]),
+        title: CupertinoSlidingSegmentedControl<int>(
+          backgroundColor: Colors.grey,
+          groupValue: _isDistanceMode ? 1 : 0,
+          children: {
+            1: Text('ابعاد', style: _customTextStyle),
+            0: Text('انحراف', style: _customTextStyle),
+          },
+          onValueChanged: (value) {
+            if (value == null) return;
+            setState(() {
+              _isDistanceMode = value == 1;
+            });
+          },
+        ),
+        actions: [
+          if (widget.image != null)
+            IconButton(
+              onPressed: () async {
+                showDialog(
+                  context: context,
+                  builder: (context) => _buildDialog(),
+                );
+              },
+              tooltip: 'ذخیره',
+              icon: const Icon(Icons.save),
+            )
+        ],
+      ),
       body: Align(
         alignment: Alignment.bottomCenter,
         child: Body(
@@ -132,7 +136,7 @@ class _DistanceAnglePageState extends State<DistanceAnglePage>
                 sideMode: SideMode.front,
                 points: widget.rightPoints + widget.leftPoints,
               );
-              await box.add(_case);
+              // await box.add();
               await widget.image!.saveTo(_case.imagePath);
               await _case.saveToFile(dir);
               showSuccessSnackBar(context,

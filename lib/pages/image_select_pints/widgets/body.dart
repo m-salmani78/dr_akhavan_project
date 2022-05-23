@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:doctor_akhavan_project/pages/image_page/widgets/painter.dart';
+import 'package:doctor_akhavan_project/pages/image_select_pints/widgets/painter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

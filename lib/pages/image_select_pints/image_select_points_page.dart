@@ -7,9 +7,10 @@ import 'package:provider/provider.dart';
 
 import 'widgets/body.dart';
 
-class ImagePage extends StatelessWidget with WidgetHelper {
+class ImageSelectPointsPage extends StatelessWidget with WidgetHelper {
   final XFile image;
-  const ImagePage({Key? key, required this.image}) : super(key: key);
+  const ImageSelectPointsPage({Key? key, required this.image})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

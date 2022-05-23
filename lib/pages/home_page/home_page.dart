@@ -1,7 +1,8 @@
-import 'package:doctor_akhavan_project/pages/mode_options_page/mode_options_page.dart';
-import 'package:doctor_akhavan_project/pages/results_page/results_page.dart';
-import 'package:doctor_akhavan_project/pages/settings_page/settings_page.dart';
 import 'package:flutter/material.dart';
+
+import '../mode_options_page/mode_options_page.dart';
+import '../results_page/results_page.dart';
+import '../settings_page/settings_page.dart';
 
 const List<Widget> _slides = [
   ModeOptionsPage(),
@@ -35,8 +36,8 @@ class _HomePageState extends State<HomePage> {
             label: 'نتایج',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'تنظیمات',
+            icon: Icon(Icons.person),
+            label: 'پروفایل',
           )
         ],
       ),

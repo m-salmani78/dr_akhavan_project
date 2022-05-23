@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'dart:convert';
 
+import '../helpers/side_mode.dart';
+
 part 'case.g.dart';
 
 Case caseFromJson(String str) => Case.fromMap(jsonDecode(str));
 
 String caseToJson(Case data) => jsonEncode(data.toMap());
-
-enum SideMode { front, back, right }
 
 @HiveType(typeId: 0)
 class Case {

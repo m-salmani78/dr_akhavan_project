@@ -1,15 +1,18 @@
 import 'dart:developer';
 
 import 'package:camera/camera.dart';
+import 'package:doctor_akhavan_project/helpers/side_mode.dart';
 import 'package:doctor_akhavan_project/pages/image_editor_page/image_editor_page.dart';
 import 'package:flutter/material.dart';
 
 class CameraService {
+  late SideMode _sideMode;
   late CameraController controller;
   List<CameraDescription>? cameras;
   FlashMode flashMode = FlashMode.off;
 
-  Future<List<CameraDescription>?> init() async {
+  Future<List<CameraDescription>?> init(SideMode sideMode) async {
+    _sideMode = sideMode;
     cameras = await availableCameras();
     log('${cameras?.length}', name: 'camera len');
     log('$cameras', name: 'camera');
@@ -31,7 +34,10 @@ class CameraService {
     final image = await controller.takePicture();
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => ImageEditorPage(image: image)),
+      MaterialPageRoute(
+        builder: (context) =>
+            ImageEditorPage(image: image, sideMode: _sideMode),
+      ),
     );
   }
 

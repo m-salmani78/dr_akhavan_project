@@ -1,13 +1,17 @@
 import 'package:camera/camera.dart';
 import 'package:doctor_akhavan_project/helpers/mixin.dart';
-import 'package:doctor_akhavan_project/pages/image_page/image_page.dart';
 import 'package:doctor_akhavan_project/services/image_editor_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../helpers/side_mode.dart';
+import '../image_select_pints/image_select_points_page.dart';
+
 class ImageEditorPage extends StatelessWidget with WidgetHelper {
   final XFile image;
-  ImageEditorPage({Key? key, required this.image}) : super(key: key);
+  final SideMode sideMode;
+  ImageEditorPage({Key? key, required this.image, required this.sideMode})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +48,8 @@ class ImageEditorPage extends StatelessWidget with WidgetHelper {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (_) =>
-                        ImagePage(image: XFile(provider.imageFile.path)),
+                    builder: (_) => ImageSelectPointsPage(
+                        image: XFile(provider.imageFile.path)),
                   ),
                 );
               },
