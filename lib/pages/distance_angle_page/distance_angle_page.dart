@@ -5,6 +5,7 @@ import 'package:camera/camera.dart';
 import 'package:doctor_akhavan_project/constants/app_constants.dart';
 import 'package:doctor_akhavan_project/helpers/mixin.dart';
 import 'package:doctor_akhavan_project/helpers/show_snack_bar.dart';
+import 'package:doctor_akhavan_project/helpers/side_mode.dart';
 import 'package:doctor_akhavan_project/models/case.dart';
 import 'package:doctor_akhavan_project/models/patient.dart';
 import 'package:doctor_akhavan_project/pages/home_page/home_page.dart';
@@ -13,21 +14,18 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:path_provider/path_provider.dart';
 
-import '../../helpers/side_mode.dart';
 import 'widget/body.dart';
 
 class DistanceAnglePage extends StatefulWidget {
-  final List<Offset> leftPoints;
-  final List<Offset> rightPoints;
+  final Case sideCase;
   final XFile? image;
   final String imagePath;
-  const DistanceAnglePage(
-      {Key? key,
-      required this.leftPoints,
-      required this.rightPoints,
-      this.image,
-      this.imagePath = ''})
-      : super(key: key);
+  const DistanceAnglePage({
+    Key? key,
+    required this.sideCase,
+    this.image,
+    this.imagePath = '',
+  }) : super(key: key);
 
   @override
   State<DistanceAnglePage> createState() => _DistanceAnglePageState();
@@ -36,10 +34,8 @@ class DistanceAnglePage extends StatefulWidget {
 class _DistanceAnglePageState extends State<DistanceAnglePage>
     with WidgetHelper {
   late Box<Patient> box;
-  final _formKey = GlobalKey<FormState>();
   final _customTextStyle = const TextStyle(color: Colors.black87, fontSize: 16);
   bool _isDistanceMode = true;
-  String _fileName = '';
 
   @override
   void initState() {
@@ -62,9 +58,7 @@ class _DistanceAnglePageState extends State<DistanceAnglePage>
           },
           onValueChanged: (value) {
             if (value == null) return;
-            setState(() {
-              _isDistanceMode = value == 1;
-            });
+            setState(() => _isDistanceMode = value == 1);
           },
         ),
         actions: [
@@ -88,8 +82,7 @@ class _DistanceAnglePageState extends State<DistanceAnglePage>
               File(
                   widget.image != null ? widget.image!.path : widget.imagePath),
             ),
-            leftPoints: widget.leftPoints,
-            rightPoints: widget.rightPoints,
+            sideCase: widget.sideCase,
             isDistanceMode: _isDistanceMode),
       ),
     );
@@ -99,26 +92,15 @@ class _DistanceAnglePageState extends State<DistanceAnglePage>
     return AlertDialog(
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      title: const Text('نام فایل را وارد کنید:'),
-      content: Form(
-        key: _formKey,
-        child: TextFormField(
-          onChanged: (value) => _fileName = value,
-          validator: (value) {
-            if (value == null || value.isEmpty) return 'این فیلد اجباریست.';
-            return null;
-          },
-        ),
-      ),
+      title: const Text('آیا میخواهید تصویر را ذخیره کنید؟'),
       actions: [
         TextButton(
-          child: const Text('لغو'),
+          child: const Text('خیر'),
           onPressed: () => Navigator.pop(context),
         ),
         TextButton(
           onPressed: () async {
             try {
-              if (!_formKey.currentState!.validate()) return;
               String? dir;
               if (Platform.isAndroid) {
                 dir = (await getExternalStorageDirectory())?.path;
@@ -126,19 +108,22 @@ class _DistanceAnglePageState extends State<DistanceAnglePage>
                 dir = (await getApplicationDocumentsDirectory()).path;
               }
               if (dir == null) throw Exception();
-              final dateTime = DateTime.now();
-              final _case = Case(
-                caseId: box.values.length,
-                patientId: 1,
-                fileName: _fileName,
-                imagePath: '$dir/image_$_fileName.png',
-                dateTime: dateTime,
-                sideMode: SideMode.front,
-                points: widget.rightPoints + widget.leftPoints,
-              );
-              // await box.add();
-              await widget.image!.saveTo(_case.imagePath);
-              await _case.saveToFile(dir);
+              final Patient patient = box.getAt(0)!;
+              switch (widget.sideCase.sideMode) {
+                case SideMode.front:
+                  patient.frontSideCase = widget.sideCase;
+                  break;
+                case SideMode.back:
+                  patient.backSideCase = widget.sideCase;
+                  break;
+                case SideMode.right:
+                  patient.rightSideCase = widget.sideCase;
+                  break;
+              }
+              await widget.image!.saveTo(dir + widget.sideCase.imageName);
+              await patient.saveToFile(dir);
+              await box.clear();
+              await box.add(patient);
               showSuccessSnackBar(context,
                   message: 'عملیات با موفقیت انجام شد.');
               Navigator.pushAndRemoveUntil(
@@ -151,7 +136,7 @@ class _DistanceAnglePageState extends State<DistanceAnglePage>
                   message: 'ذخیره سازی با مشکل مواجه شد.');
             }
           },
-          child: const Text('تایید'),
+          child: const Text('بله'),
         ),
       ],
     );

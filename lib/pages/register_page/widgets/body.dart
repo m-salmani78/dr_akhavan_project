@@ -1,5 +1,6 @@
 import 'package:doctor_akhavan_project/constants/app_constants.dart';
 import 'package:doctor_akhavan_project/models/patient.dart';
+import 'package:doctor_akhavan_project/pages/home_page/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -19,8 +20,9 @@ class _BodyState extends State<Body> {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       children: [
+        const SizedBox(height: 24),
         _buildNameTextField(),
         const SizedBox(height: 24),
         _buildAgeTextField(),
@@ -28,9 +30,9 @@ class _BodyState extends State<Body> {
         // _buildPhoneTextField(),
         // const SizedBox(height: 24),
         _buildGenderOptions(context),
-        const Spacer(),
+        SizedBox(height: MediaQuery.of(context).size.height * 0.4),
         _buildConfirmButton(),
-        const SizedBox(height: 8),
+        const SizedBox(height: 16),
       ],
     );
   }
@@ -97,9 +99,9 @@ class _BodyState extends State<Body> {
   }
 
   _buildConfirmButton() {
-    return Container(
+    return SizedBox(
       width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      // padding: const EdgeInsets.symmetric(vertical: 8),
       child: ElevatedButton(
         onPressed: (_gender != null && _name.isNotEmpty && _age.isNotEmpty)
             ? () {
@@ -111,6 +113,12 @@ class _BodyState extends State<Body> {
                 );
                 final box = Hive.box<Patient>(patientBox);
                 box.add(patient);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const HomePage(),
+                  ),
+                );
               }
             : null,
         child: const Text('تایید'),

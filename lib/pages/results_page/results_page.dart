@@ -2,9 +2,11 @@ import 'dart:io';
 
 import 'package:doctor_akhavan_project/constants/app_constants.dart';
 import 'package:doctor_akhavan_project/models/patient.dart';
-import 'package:doctor_akhavan_project/pages/distance_angle_page/distance_angle_page.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:path_provider/path_provider.dart';
+
+import 'widget/body.dart';
 
 class ResultsPage extends StatelessWidget {
   const ResultsPage({Key? key}) : super(key: key);
@@ -19,48 +21,31 @@ class ResultsPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text('نتایج'), centerTitle: true),
-      body: ListView(
-        children: [
-          patients?.frontSideCase,
-          patients?.backSideCase,
-          patients?.rightSideCase
-        ]
-            .map<Widget>(
-              (e) => e == null
-                  ? const SizedBox()
-                  : ListTile(
-                      leading: AspectRatio(
-                        aspectRatio: 0.8,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child:
-                              Image.file(File(e.imagePath), fit: BoxFit.cover),
-                        ),
-                      ),
-                      title: Text(e.fileName),
-                      subtitle: Text(
-                          e.dateTime.toIso8601String().split('T').join('\n')),
-                      trailing: Text(e.sideMode.name),
-                      isThreeLine: true,
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DistanceAnglePage(
-                                  rightPoints: e.points
-                                      .getRange(0, e.points.length ~/ 2)
-                                      .toList(),
-                                  leftPoints: e.points
-                                      .getRange(
-                                          e.points.length ~/ 2, e.points.length)
-                                      .toList(),
-                                  imagePath: e.imagePath),
-                            ));
-                      },
-                    ),
-            )
-            .toList(),
+      body: FutureBuilder(
+        future: getDirection(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            String dir = snapshot.data as String;
+            final list = [
+              patients?.frontSideCase,
+              patients?.backSideCase,
+              patients?.rightSideCase
+            ];
+            return Body(dir: dir, list: list);
+          }
+          return const Center(child: CircularProgressIndicator());
+        },
       ),
     );
+  }
+
+  Future<String> getDirection() async {
+    String? dir;
+    if (Platform.isAndroid) {
+      dir = (await getExternalStorageDirectory())?.path;
+    } else if (Platform.isIOS) {
+      dir = (await getApplicationDocumentsDirectory()).path;
+    }
+    return dir!;
   }
 }

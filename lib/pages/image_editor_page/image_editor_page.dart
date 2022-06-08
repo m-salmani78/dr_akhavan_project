@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../helpers/side_mode.dart';
-import '../image_select_pints/image_select_points_page.dart';
+import '../image_select_points/image_select_points_page.dart';
 
 class ImageEditorPage extends StatelessWidget with WidgetHelper {
   final XFile image;
@@ -21,6 +21,7 @@ class ImageEditorPage extends StatelessWidget with WidgetHelper {
         final provider = context.watch<ImageEditorProvider>();
         return Scaffold(
           appBar: customAppBar(
+            leading: CloseButton(onPressed: () => Navigator.pop(context)),
             actions: [
               IconButton(
                   onPressed: () => provider.clipImage(height: 100, width: 100),
@@ -49,7 +50,9 @@ class ImageEditorPage extends StatelessWidget with WidgetHelper {
                   context,
                   MaterialPageRoute(
                     builder: (_) => ImageSelectPointsPage(
-                        image: XFile(provider.imageFile.path)),
+                      image: XFile(provider.imageFile.path),
+                      sideMode: sideMode,
+                    ),
                   ),
                 );
               },

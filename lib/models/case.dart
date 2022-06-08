@@ -1,6 +1,3 @@
-import 'dart:developer';
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'dart:convert';
@@ -16,64 +13,46 @@ String caseToJson(Case data) => jsonEncode(data.toMap());
 @HiveType(typeId: 0)
 class Case {
   Case({
-    required this.caseId,
     required this.patientId,
-    required this.imagePath,
+    required this.imageName,
     required this.dateTime,
     required this.sideMode,
     required this.points,
-    required this.fileName,
   });
 
-  @HiveField(0)
-  final int caseId;
   @HiveField(1)
   final int patientId;
   @HiveField(2)
-  final String imagePath;
+  final String imageName;
   @HiveField(3)
   final DateTime dateTime;
   @HiveField(4)
   final SideMode sideMode;
   @HiveField(5)
   final List<Offset> points;
-  @HiveField(6)
-  final String fileName;
 
   factory Case.fromMap(Map<String, dynamic> json) => Case(
-        caseId: json["case_id"],
         patientId: json["patient_id"],
-        imagePath: json["image_path"],
-        fileName: json["file_name"],
+        imageName: json["image_name"],
         dateTime: DateTime.parse(json["date_time"]),
-        sideMode: SideMode.values[json["side_mode"].toInt()],
+        sideMode: SideMode.values.firstWhere(
+          (e) => e.name == json["side_mode"],
+          orElse: () => SideMode.front,
+        ),
         points: List<Offset>.from(json["points"].map(
           (x) => Offset(json["dx"].toDouble(), json["dy"].toDouble()),
         )),
       );
 
   Map<String, dynamic> toMap() => {
-        "case_id": caseId,
         "patient_id": patientId,
-        "image_path": imagePath,
-        "file_name": fileName,
+        "image_name": imageName,
         "date_time": dateTime.toString(),
-        "side_mode": sideMode.index,
+        "side_mode": sideMode.name,
         "points": points
             .map<Map<String, double>>(
               (element) => {"dx": element.dx, "dy": element.dy},
             )
             .toList(),
       };
-
-  Future<bool> saveToFile(String dir) async {
-    try {
-      final jsonFile = File('$dir/$fileName.json');
-      await jsonFile.writeAsString(caseToJson(this));
-      return true;
-    } catch (e) {
-      log('error: $e', name: 'saveToFile');
-      return false;
-    }
-  }
 }

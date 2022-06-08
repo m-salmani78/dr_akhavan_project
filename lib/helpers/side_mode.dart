@@ -18,9 +18,9 @@ String getImageFromSideMode(SideMode sideMode) {
     case SideMode.front:
       return 'assets/images/front_side.png';
     case SideMode.back:
-      return 'assets/images/left_side.png';
-    case SideMode.right:
       return 'assets/images/back_side.png';
+    case SideMode.right:
+      return 'assets/images/left_side.png';
     default:
       return '';
   }

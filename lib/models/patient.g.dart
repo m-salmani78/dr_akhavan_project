@@ -21,9 +21,9 @@ class PatientAdapter extends TypeAdapter<Patient> {
       name: fields[1] as String,
       age: fields[2] as int,
       gender: Gender.values[fields[3].toInt()],
-      frontSideCase: fields[4] as Case,
-      backSideCase: fields[5] as Case,
-      rightSideCase: fields[6] as Case,
+      frontSideCase: fields[4] as Case?,
+      backSideCase: fields[5] as Case?,
+      rightSideCase: fields[6] as Case?,
     );
   }
 

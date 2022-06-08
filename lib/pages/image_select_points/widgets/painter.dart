@@ -20,8 +20,7 @@ class CustomPointPainter extends CustomPainter {
     canvas.drawPoints(
         PointMode.points,
         [
-          ...provider.rightPoints.toList(),
-          ...provider.leftPoints.toList(),
+          ...provider.bodyPoints.toList(),
           if (!provider.isFinished) provider.selectedPoint
         ],
         paint);
