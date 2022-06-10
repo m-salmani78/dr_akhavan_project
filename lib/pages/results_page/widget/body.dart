@@ -25,7 +25,7 @@ class Body extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: Image.file(
-                          File(dir + e.imageName),
+                          File('$dir/${e.imageName}'),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -41,7 +41,7 @@ class Body extends StatelessWidget {
                           MaterialPageRoute(
                             builder: (context) => DistanceAnglePage(
                               sideCase: e,
-                              imagePath: dir + e.imageName,
+                              imagePath: '$dir/${e.imageName}',
                             ),
                           ));
                     },

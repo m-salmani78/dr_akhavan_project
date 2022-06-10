@@ -1,3 +1,4 @@
+import 'package:doctor_akhavan_project/constants/app_constants.dart';
 import 'package:flutter/material.dart';
 
 void showWarningSnackBar(BuildContext context, {required String message}) {
@@ -9,14 +10,16 @@ void showWarningSnackBar(BuildContext context, {required String message}) {
         Flexible(
           child: Text(
             message,
-            style: const TextStyle(fontFamily: 'IranSans'),
+            style: const TextStyle(fontFamily: 'IranianSans'),
           ),
         ),
       ],
     ),
     backgroundColor: Colors.orange,
     behavior: SnackBarBehavior.floating,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    shape: ContinuousRectangleBorder(
+      borderRadius: BorderRadius.circular(cornerRadius * 4),
+    ),
     // action: SnackBarAction(
     //     label: 'Done', textColor: Colors.white, onPressed: () {}),
   );
@@ -35,14 +38,16 @@ void showSuccessSnackBar(BuildContext context, {required String message}) {
         Flexible(
           child: Text(
             message,
-            style: const TextStyle(fontFamily: 'IranSans'),
+            style: const TextStyle(fontFamily: 'IranianSans'),
           ),
         ),
       ],
     ),
     backgroundColor: Colors.green,
     behavior: SnackBarBehavior.floating,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    shape: ContinuousRectangleBorder(
+      borderRadius: BorderRadius.circular(cornerRadius * 4),
+    ),
     // action: SnackBarAction(
     //     label: 'Done', textColor: Colors.white, onPressed: () {}),
   );

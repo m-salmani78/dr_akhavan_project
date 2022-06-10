@@ -1,39 +1,48 @@
-import 'package:doctor_akhavan_project/constants/app_constants.dart';
-import 'package:doctor_akhavan_project/models/patient.dart';
-import 'package:doctor_akhavan_project/pages/home_page/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hive_flutter/adapters.dart';
 
-class Body extends StatefulWidget {
-  const Body({Key? key}) : super(key: key);
+import '../../../constants/app_constants.dart';
+import '../../../helpers/show_snack_bar.dart';
+import '../../../models/patient.dart';
+import '../bmi_pge/bmi_page.dart';
+
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({Key? key}) : super(key: key);
 
   @override
-  State<Body> createState() => _BodyState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _BodyState extends State<Body> {
+class _RegisterPageState extends State<RegisterPage> {
   String _name = '';
   String _age = '';
   Gender? _gender;
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      children: [
-        const SizedBox(height: 24),
-        _buildNameTextField(),
-        const SizedBox(height: 24),
-        _buildAgeTextField(),
-        const SizedBox(height: 24),
-        // _buildPhoneTextField(),
-        // const SizedBox(height: 24),
-        _buildGenderOptions(context),
-        SizedBox(height: MediaQuery.of(context).size.height * 0.4),
-        _buildConfirmButton(),
-        const SizedBox(height: 16),
-      ],
+    final height = MediaQuery.of(context).size.height;
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('مشخصات کاربر'),
+        centerTitle: true,
+        elevation: 0,
+        backgroundColor: Colors.transparent,
+        foregroundColor: Colors.black,
+      ),
+      body: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        children: [
+          SizedBox(height: height * 0.2),
+          _buildNameTextField(),
+          const SizedBox(height: 36),
+          _buildAgeTextField(),
+          const SizedBox(height: 36),
+          _buildGenderOptions(context),
+          // SizedBox(height: height * 0.2),
+          // const SizedBox(height: 24),
+        ],
+      ),
+      bottomNavigationBar: _buildConfirmButton(),
     );
   }
 
@@ -56,12 +65,6 @@ class _BodyState extends State<Body> {
   }
 
   // _buildPhoneTextField() {
-  //   return const TextField(
-  //     textInputAction: TextInputAction.next,
-  //     decoration: InputDecoration(hintText: 'شماره تلفن'),
-  //   );
-  // }
-
   _buildGenderOptions(BuildContext context) {
     return Row(
       children: [
@@ -99,10 +102,9 @@ class _BodyState extends State<Body> {
   }
 
   _buildConfirmButton() {
-    return SizedBox(
-      width: double.infinity,
-      // padding: const EdgeInsets.symmetric(vertical: 8),
-      child: ElevatedButton(
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+      child: ElevatedButton.icon(
         onPressed: (_gender != null && _name.isNotEmpty && _age.isNotEmpty)
             ? () {
                 final int age = int.tryParse(_age) ?? 0;
@@ -111,17 +113,24 @@ class _BodyState extends State<Body> {
                   age: age,
                   gender: _gender!,
                 );
-                final box = Hive.box<Patient>(patientBox);
-                box.add(patient);
-                Navigator.pushReplacement(
+                Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const HomePage(),
+                    builder: (context) => BMIPage(patient: patient),
                   ),
                 );
               }
-            : null,
-        child: const Text('تایید'),
+            : () {
+                showWarningSnackBar(
+                  context,
+                  message: 'ابتدا اطلاعات خواسته شده را تکمیل کنید.',
+                );
+              },
+        label: const SizedBox(
+          width: double.infinity,
+          child: Text('بعدی', textAlign: TextAlign.center),
+        ),
+        icon: const Icon(Icons.arrow_back_ios_rounded),
       ),
     );
   }

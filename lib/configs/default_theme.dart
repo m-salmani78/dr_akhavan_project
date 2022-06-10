@@ -41,8 +41,9 @@ ElevatedButtonThemeData elevatedButtonTheme() => ElevatedButtonThemeData(
       style: ButtonStyle(
         padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
             const EdgeInsets.symmetric(vertical: 12, horizontal: 24)),
-        shape: MaterialStateProperty.all<OutlinedBorder>(RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(cornerRadius))),
+        shape: MaterialStateProperty.all<OutlinedBorder>(
+            ContinuousRectangleBorder(
+                borderRadius: BorderRadius.circular(cornerRadius * 4))),
         // foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
       ),
     );

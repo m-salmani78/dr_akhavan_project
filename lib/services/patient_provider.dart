@@ -1,11 +1,26 @@
-import 'package:doctor_akhavan_project/models/patient.dart';
-import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'dart:developer';
+import 'dart:io';
 
-import '../constants/app_constants.dart';
+import 'package:path_provider/path_provider.dart';
 
-class PatientProvider extends ChangeNotifier {
-  final box = Hive.box<Patient>(patientBox);
-
-  addPatient(BuildContext context, {required Patient patient}) {}
+class PatientAccount {
+  // addPatient(BuildContext context, {required Patient patient}) {}
+  static final PatientAccount _instance = PatientAccount._internal();
+  PatientAccount._internal();
+  factory PatientAccount() => _instance;
+  int? accountIndex;
+  Future<String> getDirection(String? name) async {
+    String? dir;
+    if (Platform.isAndroid) {
+      dir = (await getExternalStorageDirectory())?.path;
+    } else if (Platform.isIOS) {
+      dir = (await getApplicationDocumentsDirectory()).path;
+    }
+    // dir = dir! + '/DrAkhavan';
+    if (name != null) {
+      dir = (await Directory('$dir/$name').create(recursive: true)).path;
+    }
+    log('Path: $dir');
+    return dir!;
+  }
 }

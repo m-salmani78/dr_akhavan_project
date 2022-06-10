@@ -6,7 +6,8 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('تنظیمات'), centerTitle: true),
+      appBar: AppBar(title: const Text('پروفایل'), centerTitle: true),
+      body: ListView(),
     );
   }
 }

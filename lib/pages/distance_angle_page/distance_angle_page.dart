@@ -12,8 +12,8 @@ import 'package:doctor_akhavan_project/pages/home_page/home_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:path_provider/path_provider.dart';
 
+import '../../services/patient_provider.dart';
 import 'widget/body.dart';
 
 class DistanceAnglePage extends StatefulWidget {
@@ -101,14 +101,9 @@ class _DistanceAnglePageState extends State<DistanceAnglePage>
         TextButton(
           onPressed: () async {
             try {
-              String? dir;
-              if (Platform.isAndroid) {
-                dir = (await getExternalStorageDirectory())?.path;
-              } else if (Platform.isIOS) {
-                dir = (await getApplicationDocumentsDirectory()).path;
-              }
-              if (dir == null) throw Exception();
-              final Patient patient = box.getAt(0)!;
+              final patientIndex = PatientAccount().accountIndex ?? 0;
+              log('patient index: $patientIndex');
+              final Patient patient = box.getAt(patientIndex)!;
               switch (widget.sideCase.sideMode) {
                 case SideMode.front:
                   patient.frontSideCase = widget.sideCase;
@@ -120,10 +115,12 @@ class _DistanceAnglePageState extends State<DistanceAnglePage>
                   patient.rightSideCase = widget.sideCase;
                   break;
               }
-              await widget.image!.saveTo(dir + widget.sideCase.imageName);
-              await patient.saveToFile(dir);
-              await box.clear();
-              await box.add(patient);
+              final dir = await patient.saveToFile();
+              await widget.image!
+                  .saveTo(dir! + '/' + widget.sideCase.imageName);
+              // await box.deleteAt(PatientAccount().accountIndex ?? 0);
+              await box.putAt(patientIndex, patient);
+              log('box length: ${box.length}');
               showSuccessSnackBar(context,
                   message: 'عملیات با موفقیت انجام شد.');
               Navigator.pushAndRemoveUntil(
